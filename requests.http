@@ -1,0 +1,32 @@
+### Get all agents
+GET http://localhost:8080/api/agents
+
+
+### Get agent by ID
+GET http://localhost:8080/api/agents/1
+
+
+### Create new agent
+POST http://localhost:8080/api/agents
+Content-Type: application/json
+
+{
+  "name": "Research Bot",
+  "role": "Research",
+  "description": "Finds and summarizes useful information"
+}
+
+
+### Update agent
+PUT http://localhost:8080/api/agents/1
+Content-Type: application/json
+
+{
+  "name": "Updated AI Assistant",
+  "role": "Support",
+  "description": "Updated description for the assistant agent"
+}
+
+
+### Delete agent
+DELETE http://localhost:8080/api/agents/2
