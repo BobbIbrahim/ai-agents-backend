@@ -1,51 +1,41 @@
-### 200 OK - Get all agents
-GET http://localhost:8080/api/agents
-
-
-### 200 OK - Get existing agent by ID
-GET http://localhost:8080/api/agents/1
-
-
-### 404 Not Found - Get non-existing agent
-GET http://localhost:8080/api/agents/999999
-
-
-### 201 Created - Create new agent
+### 400 Bad Request - Create agent with empty fields
 POST http://localhost:8080/api/agents
 Content-Type: application/json
 
 {
-  "name": "Status Test Agent",
-  "role": "Tester",
-  "description": "Used to test 201 Created response"
+  "name": "",
+  "role": "",
+  "description": ""
 }
 
 
-### 200 OK - Update existing agent
+### 400 Bad Request - Create agent with spaces only
+POST http://localhost:8080/api/agents
+Content-Type: application/json
+
+{
+  "name": "   ",
+  "role": "   ",
+  "description": "   "
+}
+
+
+### 400 Bad Request - Update agent with invalid fields
 PUT http://localhost:8080/api/agents/1
 Content-Type: application/json
 
 {
-  "name": "Updated Agent",
-  "role": "Updated Role",
-  "description": "Updated description"
+  "name": "",
+  "role": "",
+  "description": ""
 }
 
-
-### 404 Not Found - Update non-existing agent
-PUT http://localhost:8080/api/agents/999999
+### 201 Created - Create valid agent
+POST http://localhost:8080/api/agents
 Content-Type: application/json
 
 {
-  "name": "Invalid Update",
-  "role": "Invalid",
-  "description": "This should return 404"
+  "name": "Validation Test Agent",
+  "role": "Tester",
+  "description": "This should be saved successfully"
 }
-
-
-### 204 No Content - Delete existing agent
-DELETE http://localhost:8080/api/agents/1
-
-
-### 404 Not Found - Delete non-existing agent
-DELETE http://localhost:8080/api/agents/999999

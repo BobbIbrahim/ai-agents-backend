@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "agents")
@@ -14,8 +16,16 @@ public class Agent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Agent name is required")
+    @Size(max = 100, message = "Agent name must not exceed 100 characters")
     private String name;
+
+    @NotBlank(message = "Agent role is required")
+    @Size(max = 100, message = "Agent role must not exceed 100 characters")
     private String role;
+
+    @NotBlank(message = "Agent description is required")
+    @Size(max = 500, message = "Agent description must not exceed 500 characters")
     private String description;
 
     public Agent() {
@@ -49,7 +59,6 @@ public class Agent {
     public String getDescription() {
         return description;
     }
-
 
 
 

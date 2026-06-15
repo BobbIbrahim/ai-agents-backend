@@ -2,6 +2,7 @@ package com.springboot.aiagentsbackend.controller;
 
 import com.springboot.aiagentsbackend.model.Agent;
 import com.springboot.aiagentsbackend.service.AgentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +31,13 @@ public class AgentController {
     }
 
     @PostMapping
-    public ResponseEntity<Agent> createAgent(@RequestBody Agent agent) {
+    public ResponseEntity<Agent> createAgent(@Valid @RequestBody Agent agent) {
         Agent createdAgent = agentService.createAgent(agent);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAgent);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Agent> updateAgent(@PathVariable Long id, @RequestBody Agent agent) {
+    public ResponseEntity<Agent> updateAgent(@PathVariable Long id, @Valid @RequestBody Agent agent) {
         return ResponseEntity.ok(agentService.updateAgent(id, agent));
     }
 
