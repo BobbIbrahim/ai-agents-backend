@@ -1,5 +1,6 @@
 package com.springboot.aiagentsbackend.service;
 
+import com.springboot.aiagentsbackend.exception.ResourceNotFoundException;
 import com.springboot.aiagentsbackend.model.Agent;
 import com.springboot.aiagentsbackend.repository.AgentRepository;
 import jakarta.annotation.PostConstruct;
@@ -30,7 +31,8 @@ public class AgentService {
     }
 
     public Agent getAgentById(Long id) {
-        return agentRepository.findById(id).orElse(null);
+        return agentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Agent with id " + id + " was not found")); //404
     }
 
     public Agent createAgent(Agent agent) {
@@ -39,11 +41,8 @@ public class AgentService {
     }
 
     public Agent updateAgent(Long id, Agent updatedAgent) {
-        Agent existingAgent = agentRepository.findById(id).orElse(null);
-
-        if (existingAgent == null) {
-            return null;
-        }
+        Agent existingAgent = agentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Agent with id " + id + " was not found")); //404
 
         existingAgent.setName(updatedAgent.getName());
         existingAgent.setRole(updatedAgent.getRole());
@@ -52,12 +51,11 @@ public class AgentService {
         return agentRepository.save(existingAgent);
     }
 
-    public boolean deleteAgent(Long id) {
+    public void deleteAgent(Long id) {
         if (!agentRepository.existsById(id)) {
-            return false;
+            throw new ResourceNotFoundException("Agent with id " + id + " was not found"); //404
         }
 
-        agentRepository.deleteById(id);
-        return true;
+        agentRepository.deleteById(id); // 204 no content
     }
 }

@@ -1,32 +1,51 @@
-### Get all agents
+### 200 OK - Get all agents
 GET http://localhost:8080/api/agents
 
 
-### Get agent by ID
+### 200 OK - Get existing agent by ID
 GET http://localhost:8080/api/agents/1
 
 
-### Create new agent
+### 404 Not Found - Get non-existing agent
+GET http://localhost:8080/api/agents/999999
+
+
+### 201 Created - Create new agent
 POST http://localhost:8080/api/agents
 Content-Type: application/json
 
 {
-  "name": "Research Bot",
-  "role": "Research",
-  "description": "Finds and summarizes useful information"
+  "name": "Status Test Agent",
+  "role": "Tester",
+  "description": "Used to test 201 Created response"
 }
 
 
-### Update agent
+### 200 OK - Update existing agent
 PUT http://localhost:8080/api/agents/1
 Content-Type: application/json
 
 {
-  "name": "Updated AI Assistant",
-  "role": "Support",
-  "description": "Updated description for the assistant agent"
+  "name": "Updated Agent",
+  "role": "Updated Role",
+  "description": "Updated description"
 }
 
 
-### Delete agent
-DELETE http://localhost:8080/api/agents/2
+### 404 Not Found - Update non-existing agent
+PUT http://localhost:8080/api/agents/999999
+Content-Type: application/json
+
+{
+  "name": "Invalid Update",
+  "role": "Invalid",
+  "description": "This should return 404"
+}
+
+
+### 204 No Content - Delete existing agent
+DELETE http://localhost:8080/api/agents/1
+
+
+### 404 Not Found - Delete non-existing agent
+DELETE http://localhost:8080/api/agents/999999
