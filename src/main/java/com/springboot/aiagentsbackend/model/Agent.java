@@ -1,13 +1,30 @@
 package com.springboot.aiagentsbackend.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "agents")
 public class Agent {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String role;
     private String description;
 
     public Agent() {
+    }
+
+    public Agent(String name, String role, String description) {
+        this.name = name;
+        this.role = role;
+        this.description = description;
     }
 
     public Agent(Long id, String name, String role, String description) {
@@ -32,6 +49,9 @@ public class Agent {
     public String getDescription() {
         return description;
     }
+
+
+
 
     public void setId(Long id) {
         this.id = id;

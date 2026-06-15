@@ -1,42 +1,45 @@
 package com.springboot.aiagentsbackend.service;
 
 import com.springboot.aiagentsbackend.model.Agent;
+import com.springboot.aiagentsbackend.repository.AgentRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class AgentService {
 
-    private final List<Agent> agents = new ArrayList<>();
-    private Long nextId = 1L;
+    private final AgentRepository agentRepository;
 
-    public AgentService() {
-        agents.add(new Agent(nextId++, "AI Assistant", "Support", "Helps users answer questions"));
-        agents.add(new Agent(nextId++, "Data Analyzer", "Analytics", "Analyzes data and generates insights"));
-        agents.add(new Agent(nextId++, "Code Helper", "Development", "Assists developers with coding tasks"));
+    public AgentService(AgentRepository agentRepository) {
+        this.agentRepository = agentRepository;
+    }
+
+    @PostConstruct
+    public void seedData() {
+        if (agentRepository.count() == 0) {
+            agentRepository.save(new Agent("AI Assistant", "Support", "Helps users answer questions"));
+            agentRepository.save(new Agent("Data Analyzer", "Analytics", "Analyzes data and generates insights"));
+            agentRepository.save(new Agent("Code Helper", "Development", "Assists developers with coding tasks"));
+        }
     }
 
     public List<Agent> getAllAgents() {
-        return agents;
+        return agentRepository.findAll();
     }
 
     public Agent getAgentById(Long id) {
-        return agents.stream()
-                .filter(agent -> agent.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return agentRepository.findById(id).orElse(null);
     }
 
     public Agent createAgent(Agent agent) {
-        agent.setId(nextId++);
-        agents.add(agent);
-        return agent;
+        agent.setId(null);
+        return agentRepository.save(agent);
     }
 
     public Agent updateAgent(Long id, Agent updatedAgent) {
-        Agent existingAgent = getAgentById(id);
+        Agent existingAgent = agentRepository.findById(id).orElse(null);
 
         if (existingAgent == null) {
             return null;
@@ -46,10 +49,15 @@ public class AgentService {
         existingAgent.setRole(updatedAgent.getRole());
         existingAgent.setDescription(updatedAgent.getDescription());
 
-        return existingAgent;
+        return agentRepository.save(existingAgent);
     }
 
     public boolean deleteAgent(Long id) {
-        return agents.removeIf(agent -> agent.getId().equals(id));
+        if (!agentRepository.existsById(id)) {
+            return false;
+        }
+
+        agentRepository.deleteById(id);
+        return true;
     }
 }
