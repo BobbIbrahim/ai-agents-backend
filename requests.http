@@ -39,3 +39,9 @@ Content-Type: application/json
   "role": "Tester",
   "description": "This should be saved successfully"
 }
+
+### Direct backend
+GET http://localhost:8081/api/agents
+
+### Through gateway
+GET http://localhost:8080/api/agents
