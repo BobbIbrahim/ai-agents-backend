@@ -2,6 +2,7 @@ package com.springboot.aiagentsbackend.controller;
 
 import com.springboot.aiagentsbackend.model.Agent;
 import com.springboot.aiagentsbackend.service.AgentService;
+import com.springboot.aiagentsbackend.service.MessageProducer;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,11 @@ import java.util.List;
 public class AgentController {
 
     private final AgentService agentService;
+    private final MessageProducer messageProducer;
 
-    public AgentController(AgentService agentService) {
+    public AgentController(AgentService agentService, MessageProducer messageProducer) {
         this.agentService = agentService;
+        this.messageProducer = messageProducer;
     }
 
     @GetMapping
@@ -45,4 +48,11 @@ public class AgentController {
         agentService.deleteAgent(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/test-rabbit")
+    public String testRabbit() {
+        messageProducer.sendMessage("Hello RabbitMQ");
+        return "Message sent!";
+    }
+
 }

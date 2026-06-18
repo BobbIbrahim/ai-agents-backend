@@ -3,6 +3,8 @@ package com.springboot.aiagentsbackend.service;
 import com.springboot.aiagentsbackend.exception.ResourceNotFoundException;
 import com.springboot.aiagentsbackend.model.Agent;
 import com.springboot.aiagentsbackend.repository.AgentRepository;
+import com.springboot.aiagentsbackend.service.MessageProducer;
+import com.springboot.aiagentsbackend.messaging.AgentCreatedEvent;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,12 @@ import java.util.List;
 public class AgentService {
 
     private final AgentRepository agentRepository;
+    private final MessageProducer messageProducer;
 
-    public AgentService(AgentRepository agentRepository) {
+
+    public AgentService(AgentRepository agentRepository, MessageProducer messageProducer) {
         this.agentRepository = agentRepository;
+        this.messageProducer = messageProducer;
     }
 
     @PostConstruct
@@ -35,10 +40,18 @@ public class AgentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Agent with id " + id + " was not found")); //404
     }
 
+
     public Agent createAgent(Agent agent) {
         agent.setId(null);
-        return agentRepository.save(agent);
+        Agent savedAgent = agentRepository.save(agent);
+        try {
+            messageProducer.sendMessage("Agent created: " + savedAgent.getName());
+        } catch (Exception error) {
+            System.err.println("Failed to send RabbitMQ message: " + error.getMessage());
+        }
+        return savedAgent;
     }
+
 
     public Agent updateAgent(Long id, Agent updatedAgent) {
         Agent existingAgent = agentRepository.findById(id)
